@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Start Apache httpd
+service apache2 start
+
+# Sleep a sec...
+sleep 5
+
+tail -F /var/log/apache2/access.log &
+tail -F /var/log/apache2/error.log &
+
+# Wait if there is a webpage at localhost:80
+while curl http://localhost:80 -so /dev/null; do sleep 60; done
+
+# Kill tailed logs
+killall tail
