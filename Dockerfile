@@ -15,6 +15,12 @@ RUN wget -O key $REPO_KEY \
 	&& apt-key add key && rm key
 
 RUN apt-get update && apt-get install -y owncloud
+RUN apt-get install -y libreoffice-writer libreoffice-base-core libreoffice-core
+
+RUN openssl s_client -connect mail.stefanberggren.se:993 \
+	-showcerts </dev/null 2> /dev/null \
+	| openssl x509 -outform PEM > /usr/local/share/ca-certificates/mail.crt \
+	&& update-ca-certificates
 
 ADD start /start
 CMD /start
