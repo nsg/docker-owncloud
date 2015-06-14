@@ -1,16 +1,25 @@
 #!/bin/bash
 
+# /var/www/owncloud/ is mounted on the host, install the
+# upstream packaged files if this is a new install.
+# I tried to only mount data and config but that was a
+# headache with installed apps.
+if [ ! -d /var/www/owncloud/config ]; then
+	echo "Install /var/www/owncloud/"
+	rsync -a /var/www/owncloud.dist/ /var/www/owncloud
+fi
+
 # Start Apache httpd
 service apache2 start
-
-# Sleep a sec...
-sleep 5
 
 tail -F /var/log/apache2/access.log &
 tail -F /var/log/apache2/error.log &
 
-# Wait if there is a webpage at localhost:80
-while curl http://localhost:80 -so /dev/null; do sleep 60; done
+# Sleep a sec...
+sleep 5
+
+# Wait if there is a webpage at localhost:80/owncloud
+while curl http://localhost:80/owncloud/ -so /dev/null; do sleep 60; done
 
 # Kill tailed logs
 killall tail

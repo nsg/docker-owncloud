@@ -1,5 +1,5 @@
 IMAGE = nsgb/owncloud
-TAG = 8.0.4-1
+TAG = 8.0.4-4
 
 build:
 	docker build -t ${IMAGE}:${TAG} .
